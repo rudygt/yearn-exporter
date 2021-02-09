@@ -1,6 +1,6 @@
 import warnings
 
-import toml
+import toml, time
 from brownie import chain
 from click import secho, style
 from prometheus_client import Gauge, start_http_server
@@ -41,6 +41,7 @@ def exporter_v1():
             for param, value in info.items():
                 # print(f'{param} = {value}')
                 prom_gauge.labels(vault.name, param).set(value)
+        time.sleep(800)
 
 
 def develop_v2():
@@ -70,6 +71,37 @@ def exporter_v2():
             for strat in info["strategies"]:
                 for param, value in info["strategies"][strat].items():
                     strat_gauge.labels(vault.name, strat, param).set(value)
+        time.sleep(800)
+
+
+def develop_experimental():
+    for vault in vaults_v2.get_experimental_vaults():
+        print(vault)
+        print(toml.dumps(vault.describe()))
+
+
+def exporter_experimental():
+    vault_gauge = Gauge("yearn_experimental", "", ["vault", "param"])
+    strat_gauge = Gauge("yearn_strategy", "", ["vault", "strategy", "param"])
+    timing = Gauge("yearn_timing", "", ["vault", "action"])
+    start_http_server(8802)
+    experimental_vaults = vaults_v2.get_experimental_vaults()
+    for block in chain.new_blocks():
+        secho(f"{block.number}", fg="green")
+        for vault in experimental_vaults:
+            secho(vault.name)
+            with timing.labels(vault.name, "describe").time():
+                info = vault.describe()
+
+            for param, value in info.items():
+                if param == "strategies":
+                    continue
+                vault_gauge.labels(vault.name, param).set(value)
+
+            for strat in info["strategies"]:
+                for param, value in info["strategies"][strat].items():
+                    strat_gauge.labels(vault.name, strat, param).set(value)
+        time.sleep(800)
 
 
 def tvl():
