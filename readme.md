@@ -12,7 +12,18 @@ set up grafana for custom dashboards and alerts.
 ```
 brownie run yearn exporter_v1 --network mainnet
 brownie run yearn exporter_v2 --network mainnet
+brownie run yearn exporter_experimental --network mainnet
+
 ```
+
+## Docker setup
+
+```
+export WEB3_INFURA_PROJECT_ID=<YOUR_PROJECT_ID>
+docker-compose up -d
+```
+
+After successful startup you can go directly to grafana at `http://localhost:3000` and login with `admin:admin`.
 
 ## supported vaults
 
