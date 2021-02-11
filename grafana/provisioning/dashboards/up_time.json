@@ -201,7 +201,7 @@
       "pluginVersion": "7.4.0",
       "targets": [
         {
-          "expr": "up{job=\"yearn\"}",
+          "expr": "up{job=\"yearn-v1\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{job}}",
@@ -280,7 +280,7 @@
       "pluginVersion": "7.4.0",
       "targets": [
         {
-          "expr": "up{job=\"yearnv2\"}",
+          "expr": "up{job=\"yearn-v2\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{job}}",
@@ -347,13 +347,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "up{job=\"yearn\"}",
+          "expr": "up{job=\"yearn-v1\"}",
           "interval": "",
           "legendFormat": "v1 Vaults Exporter",
           "refId": "A"
         },
         {
-          "expr": "up{job=\"yearnv2\"}",
+          "expr": "up{job=\"yearn-v2\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "v2 Vaults Exporter",
