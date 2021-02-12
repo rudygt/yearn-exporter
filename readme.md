@@ -22,6 +22,8 @@ brownie run yearn exporter_experimental --network mainnet
 export GF_SECURITY_ADMIN_USER=<YOUR_ADMIN_USER> # change this if you want to have a different admin user name, default is admin
 export GF_SECURITY_ADMIN_PASSWORD=<YOUR_ADMIN_PASSWORD> # change this if you want to have a different admin password, default is admin
 export WEB3_INFURA_PROJECT_ID=<YOUR_PROJECT_ID>
+export ALCHEMY_URL=<ALCHEMY_URL> # if this is set, it overrides Infura, and instead alchemy is used as the web3 provider
+
 docker-compose up -d
 ```
 
