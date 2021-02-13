@@ -2,10 +2,11 @@
 set -e
 
 NETWORK="mainnet" # default to Mainnet (Infura)
+EXPLORER="https://api.etherscan.io/api"
 
 if [[ ! -z "${ALCHEMY_URL}" ]]; then
   if [[ ! $(brownie networks list | grep mainnet-alchemy) ]]; then
-    brownie networks add Ethereum mainnet-alchemy host=$ALCHEMY_URL chainid=1
+    brownie networks add Ethereum mainnet-alchemy host=$ALCHEMY_URL chainid=1 explorer=$EXPLORER
   fi
   NETWORK="mainnet-alchemy"
 fi
