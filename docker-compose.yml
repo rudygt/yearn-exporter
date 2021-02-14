@@ -25,7 +25,6 @@ services:
     environment:
       - WEB3_INFURA_PROJECT_ID=${WEB3_INFURA_PROJECT_ID}
       - ALCHEMY_URL=${ALCHEMY_URL}
-      - WEB3_PROVIDER_URI=${ALCHEMY_URL}
     networks:
       - yearn-exporter
     restart: always
