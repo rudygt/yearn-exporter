@@ -104,6 +104,9 @@ def get_vault_addresses_from_events(topic):
 
     return vaults_flat
 
+def get_vault_addresses():
+    return get_vault_addresses_from_events(VAULTS_EVENT_TOPIC)
+
 def get_vaults():
 
     vaults_flat = get_vault_addresses_from_events(VAULTS_EVENT_TOPIC)

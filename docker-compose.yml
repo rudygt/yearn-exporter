@@ -20,10 +20,12 @@ services:
 
   yearn-exporter-v2:
     build: .
+    command: exporter_v2_multicall
     command: exporter_v2
     environment:
       - WEB3_INFURA_PROJECT_ID=${WEB3_INFURA_PROJECT_ID}
       - ALCHEMY_URL=${ALCHEMY_URL}
+      - WEB3_PROVIDER_URI=${ALCHEMY_URL}
     networks:
       - yearn-exporter
     restart: always

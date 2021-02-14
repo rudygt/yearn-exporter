@@ -4,8 +4,9 @@ import toml, time
 from brownie import chain
 from click import secho, style
 from prometheus_client import Gauge, start_http_server
+from web3.exceptions import BlockNotFound
 
-from yearn import vaults_v1, vaults_v2
+from yearn import vaults_v1, vaults_v2, vaults_v2_multicall
 
 warnings.simplefilter("ignore")
 
@@ -129,3 +130,31 @@ def tvl():
 
     print(style(f"${total:12,.0f}", fg="green", bold=True), style(f"total", fg="yellow", bold=True))
 
+
+def exporter_v2_multicall():
+    vault_gauge = Gauge("yearn_vault", "", ["vault", "param"])
+    strat_gauge = Gauge("yearn_strategy", "", ["vault", "strategy", "param"])
+    timing = Gauge("yearn_timing", "", ["vault", "action"])
+    start_http_server(8801)
+    vaults = vaults_v2.get_vault_addresses()
+    vaults = vaults_v2_multicall.get_compatible_vaults(vaults)
+    while True:
+        try:
+            for block in chain.new_blocks():
+                secho(f"{block.number}", fg="green")
+                with timing.labels('multicall_vaults', "describe").time():
+                    data = vaults_v2_multicall.fetch_data(vaults)
+
+                for vault_address, info in data.items():
+                    vault_name = info['name'] + ' ' + info['apiVersion'] #+ ' ' + vault_address
+                    secho(vault_name)
+
+                    for param, value in info.items():
+                        if param in ['strategies','name','token','apiVersion']:
+                            continue
+                        vault_gauge.labels(vault_name, param).set(value)
+
+                time.sleep(300)
+        except BlockNotFound:
+            print('block not found')
+            time.sleep(15)

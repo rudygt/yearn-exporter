@@ -1,4 +1,6 @@
 from brownie import interface
+from functools import lru_cache
+import time
 
 factory = interface.UniswapFactory("0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f")
 
@@ -67,12 +69,22 @@ def uniswap_lp_price(address):
     supply = pair.totalSupply() / 1e18
     return sum(reserve / scale * price for reserve, scale, price in zip(pair.getReserves(), scales, prices)) / supply
 
+def token_price_cached(token):
+    return token_price_cached_internal(token, get_ttl_hash(300))
+
+@lru_cache()
+def token_price_cached_internal(token, ttl_hash):
+    return token_price(token)
+
+def get_ttl_hash(seconds=3600):
+    """Return the same value withing `seconds` time period"""
+    return round(time.time() / seconds)
 
 def token_price(token):
     if token in STABLECOINS:
         return 1
     # stETH Curve LP
-    if token == "0x06325440D014e39736583c165C2963BA99fAf14E":
+    if token.lower() == "0x06325440D014e39736583c165C2963BA99fAf14E".lower():
         virtual_price = interface.CurveSwap("0xDC24316b9AE028F1497c275EB9192a3Ea0f67022").get_virtual_price() / 1e18
         return price_router(weth) * virtual_price
     if is_uniswap_pool(token):

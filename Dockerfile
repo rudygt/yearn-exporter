@@ -1,6 +1,6 @@
-FROM python:3.6-buster
+FROM python:3.8-buster
 
-RUN pip3 install eth-brownie prometheus_client dataclasses
+RUN pip3 install eth-brownie prometheus_client dataclasses multicall
 RUN mkdir -p /app/yearn-exporter
 ADD . /app/yearn-exporter
 WORKDIR /app/yearn-exporter
